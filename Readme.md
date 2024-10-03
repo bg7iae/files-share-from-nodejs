@@ -10,6 +10,6 @@ docker compose up -d
 ```
 
 ### 使用
-filename = /fiels/目录下的文件资源名称（含后缀）
+filename = /files/目录下的文件资源名称（含后缀）
 
 http://localhost:3000/filename
