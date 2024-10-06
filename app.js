@@ -3,9 +3,11 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
+require('dotenv').config(); // 加载 .env 文件
+
 const app = express();
 const port = 3000;
-const baseUrl = `http://localhost:${port}`;
+const baseUrl = process.env.BASE_URL || `http://localhost:${port}`;
 
 // 存储下载链接和它们的有效期
 const downloadLinks = new Map();
@@ -19,13 +21,13 @@ function generateRandomString(length = 16) {
 function createDownloadUrl(filename) {
   const randomString = generateRandomString();
   const downloadUrl = `${baseUrl}/download/${randomString}`;
-  
+
   // 设置有效期为5分钟（300000毫秒）
-  const expiryTime = Date.now() + 300000; 
-  
+  const expiryTime = Date.now() + 300000;
+
   // 将下载链接和对应的文件存储
   downloadLinks.set(randomString, { filename, expiryTime });
-  
+
   return downloadUrl;
 }
 
@@ -40,7 +42,7 @@ function logIpAddress(ipAddress, filename) {
   const logEntry = {
     ipAddress: ipAddress,
     filename: filename,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
   };
 
   // 读取现有日志文件
@@ -110,6 +112,7 @@ app.get('/download/:randomString', (req, res) => {
   });
 });
 
+// 改为打印 baseUrl
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on ${baseUrl}`);
 });
