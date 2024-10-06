@@ -34,6 +34,29 @@ function fileExists(filePath) {
   return fs.existsSync(filePath);
 }
 
+// 记录IP地址到iplogs.json
+function logIpAddress(ipAddress, filename) {
+  const logFilePath = path.join(__dirname, 'iplogs.json');
+  const logEntry = {
+    ipAddress: ipAddress,
+    filename: filename,
+    timestamp: new Date().toISOString()
+  };
+
+  // 读取现有日志文件
+  let logs = [];
+  if (fs.existsSync(logFilePath)) {
+    const logsData = fs.readFileSync(logFilePath, 'utf8');
+    logs = JSON.parse(logsData);
+  }
+
+  // 添加新日志
+  logs.push(logEntry);
+
+  // 写入日志文件
+  fs.writeFileSync(logFilePath, JSON.stringify(logs, null, 2), 'utf8');
+}
+
 // 请求文件并生成下载链接
 app.get('/:filename', (req, res) => {
   const filename = req.params.filename;
@@ -68,6 +91,12 @@ app.get('/download/:randomString', (req, res) => {
   if (!fileExists(filePath)) {
     return res.status(404).send('File not found.');
   }
+
+  // 获取客户端 IP 地址
+  const ipAddress = req.ip;
+
+  // 记录 IP 地址和下载信息
+  logIpAddress(ipAddress, filename);
 
   // 设置为附件下载
   res.download(filePath, filename, (err) => {
