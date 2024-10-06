@@ -1,8 +1,6 @@
-version: '3'
-
 services:
   node-app:
-    image: node:18  # 使用官方 Node.js 镜像
+    image: node:22.9.0  # 使用官方 Node.js 最新镜像
     working_dir: /app  # 设置容器的工作目录
     volumes:
       - .:/app       # 挂载当前目录到容器中的 /app 目录
