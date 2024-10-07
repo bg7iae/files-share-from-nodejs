@@ -1,0 +1,9 @@
+services:
+  python-app:
+    build: .  # 从 Dockerfile 构建镜像
+    volumes:
+      - .:/app         # 挂载当前目录到容器中的 /app 目录
+    ports:
+      - "3000:3000"    # 将容器的 3000 端口映射到主机的 3000 端口
+    environment:
+      - FLASK_ENV=development
